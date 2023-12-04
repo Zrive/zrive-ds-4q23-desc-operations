@@ -2,6 +2,20 @@ import requests
 from bs4 import BeautifulSoup
 from boilerpy3 import extractors
 import numpy as np
+import html2text
+
+
+def extract_all_text(url: str):
+    url_base = "https://"
+    url_complete = url_base + url
+    html = html_request(url_complete)
+    if str(html).lower().find("error!:") != -1:
+        return None
+    else:
+        h = html2text.HTML2Text()
+        html_compelte = html.prettify()
+        h.ignore_links = False
+        return h.handle(html.prettify())
 
 
 def extract_all_data(url: str):
