@@ -51,23 +51,33 @@ def make_request(url:str, payload:dict):
         print(f"Error desconocido: {err}")
 
 def google_v1(query:str, result_total:int=10) -> str:
-    url = "https://www.googleapis.com/customsearch/v1"
-    items =[]
-    reminder = result_total
-    if reminder > 0:
-        pages = (result_total // 10) + 1
-    else:
-        pages = result_total // 10 
-    for i in range(pages):
-        if pages == i + 1 and reminder > 0:
-            payload = build_payload(API_KEY=API_KEY, cx=Search_Engine_ID, query=query, start=(i+1)*10, num=reminder)
+    try:
+        url = "https://www.googleapis.com/customsearch/v1"
+        items =[]
+        reminder = result_total
+        if reminder > 0:
+            pages = (result_total // 10) + 1
         else:
-            payload = build_payload(API_KEY=API_KEY, cx=Search_Engine_ID, query=query, start=(i+1)*10)
-        response = make_request(url=url, payload=payload)
-        items.extend(response['items'])
-    df = pd.json_normalize(items)
-    joined_snippets = '\n'.join(map(str, df['snippet']))  
-    return joined_snippets
+            pages = result_total // 10 
+        for i in range(pages):
+            if pages == i + 1 and reminder > 0:
+                payload = build_payload(API_KEY=API_KEY, cx=Search_Engine_ID, query=query, start=(i+1)*10, num=reminder)
+            else:
+                payload = build_payload(API_KEY=API_KEY, cx=Search_Engine_ID, query=query, start=(i+1)*10)
+            response = make_request(url=url, payload=payload)
+            items.extend(response['items'])
+        df = pd.json_normalize(items)
+        joined_snippets = '\n'.join(map(str, df['snippet']))  
+        return joined_snippets
+    except Exception as e:
+        print(f"Error en google_v1 para {query}: {e}")
+        return None
+
+def parser(texto_originario:str) -> str:
+    patron = re.compile(r"'snippet': '(.*?)',")
+    coincidencias = re.findall(patron, texto_originario)
+    resultado_final = '\n'.join(coincidencias)
+    return resultado_final
 
 def build_payload2(api_key, cx, q):
     payload = {
@@ -79,13 +89,12 @@ def build_payload2(api_key, cx, q):
     return payload
 
 def google_v2(query:str) -> str:
-    api_url = "https://www.googleapis.com/customsearch/v1"
-    payload = build_payload2(api_key=API_KEY, cx=Search_Engine_ID, q=query)
-    response_json = make_request(api_url, payload)
-    if response_json and 'items' in response_json:
-        first_result = response_json['items'][0]
-        if 'snippet' in first_result:
-            snippet_text = first_result['snippet']
-            return snippet_text
-    else:
+    try:
+        api_url = "https://www.googleapis.com/customsearch/v1"
+        payload = build_payload2(api_key=API_KEY, cx=Search_Engine_ID, q=query)
+        response_json = make_request(api_url, payload)
+        response_to_parse = str(response_json)
+        return parser(texto_originario=response_to_parse)
+    except Exception as e:
+        print(f"Error en google_v2 para {query}: {e}")
         return None
