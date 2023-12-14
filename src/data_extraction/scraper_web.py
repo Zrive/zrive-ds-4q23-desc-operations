@@ -10,7 +10,11 @@ logger = logging.getLogger(__name__)
 logger.level = logging.INFO
 
 
+<<<<<<< HEAD
 def request_html(url: str) -> BeautifulSoup:
+=======
+def request_html(url: str):
+>>>>>>> 685ba7e (Executable: Web_Scraper + Api_ChatGpt)
     url_base = "https://"
     url_complete = url_base + url
     html = html_request_with_cooloff(url_complete)
@@ -29,6 +33,10 @@ def html_request_with_cooloff(url: str, num_attempts: int = 2):
             response = requests.get(url)
             response.raise_for_status()
 
+<<<<<<< HEAD
+=======
+        # If we're overloading the endpoint it may refuse a connection
+>>>>>>> 685ba7e (Executable: Web_Scraper + Api_ChatGpt)
         except requests.exceptions.ConnectionError as e:
             logger.info("API refused the connection")
             logger.warning(e)
@@ -40,6 +48,10 @@ def html_request_with_cooloff(url: str, num_attempts: int = 2):
             else:
                 return "error!:"
 
+<<<<<<< HEAD
+=======
+        # Catch non 200 return codes on the HTTP header
+>>>>>>> 685ba7e (Executable: Web_Scraper + Api_ChatGpt)
         except requests.exceptions.HTTPError as e:
             logger.warning(e)
             if response.status_code == 404:
@@ -54,6 +66,10 @@ def html_request_with_cooloff(url: str, num_attempts: int = 2):
             else:
                 return "error!:"
 
+<<<<<<< HEAD
+=======
+        # We got through the loop without error so we've received a valid response
+>>>>>>> 685ba7e (Executable: Web_Scraper + Api_ChatGpt)
         soup = BeautifulSoup(response.text, "html.parser")
         return soup
 
