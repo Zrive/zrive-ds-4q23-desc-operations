@@ -51,8 +51,14 @@ import numpy as np
 
 FILE_PATH = "/home/unai/datasets/Original_POC Description of operations - Sheet3.csv"
 
+<<<<<<< HEAD
 if __name__ == "__main__":
     df = data_logic.data_extraction(FILE_PATH)
+=======
+def main():
+
+    data = data_logic.data_load(ORIGINAL_FILE_PATH)
+>>>>>>> d379a3c (Archivo main and hugging_face summarizers)
 
 <<<<<<< HEAD
     few_data = data_logic.take_few_rows(data=df, num_rows=5)
@@ -63,6 +69,7 @@ if __name__ == "__main__":
         print(row["Company_NAME"])
         html = scraper_web.request_html(row["URL"])
 
+<<<<<<< HEAD
         if str(html).lower().find("error!:") != -1:
             continue
 
@@ -89,3 +96,13 @@ if __name__ == "__main__":
 =======
     few_data.to_csv(new_csv_file, index=False, sep=",")
 >>>>>>> b70535e (fixed key exposure)
+=======
+    data_sample.to_csv(MODIFIED_FILE_PATH, index=False, sep=",")
+
+    hugging_face_summary = get_summary(data_sample)
+    hugging_face_summary.to_csv(MODIFIED_FILE_PATH,index=False, sep=",")
+
+
+if __name__ == "__main__":
+    main()
+>>>>>>> d379a3c (Archivo main and hugging_face summarizers)
