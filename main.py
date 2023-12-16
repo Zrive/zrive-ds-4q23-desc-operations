@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 from src.data_processing import data_logic
 import numpy as np
 
@@ -15,19 +16,22 @@ if __name__ == "__main__":
     data_sample.to_csv(MODIFIED_FILE_PATH, index=False, sep=",")
 =======
 from src.Hugging_face_summarizers.Hugging_face_sum1 import get_summary
+=======
+from src.Hugging_face_summarizer.Hugging_face_sum1 import get_summary
+>>>>>>> b50d2f2 (Take the final summarizer in src and change path in main)
 import pandas as pd
 
 
 def main():
-    PATH_CSV = "/home/pamalo9/zrive-ds-4q23-desc-operations/src/data/POC Description of operations - Sheet3_final.csv"
+    PATH_CSV = "src/data/POC Description of operations - Sheet3_final.csv"
     df_data = pd.read_csv(PATH_CSV)
 
     # Call function
     final_df = get_summary(df_data)
 
-    FINAL_PATH_CSV = "/home/pamalo9/zrive-ds-4q23-desc-operations/src/data/FINAL.csv"
+    FINAL_PATH_CSV = "src/data/company_summary.csv"
 
-    # Final CSV
+    # Final CSV src/data/FINAL.csv
     final_df.to_csv(FINAL_PATH_CSV, index=False)
 
 
