@@ -52,3 +52,4 @@ def get_summary(df: pd.DataFrame) -> pd.DataFrame:
             df.at[index, "summary_azma_ai_model"] = pd.NA
 
     return df
+
