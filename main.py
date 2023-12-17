@@ -48,17 +48,13 @@ from src.logic import data_logic
 import pandas as pd
 import time
 import numpy as np
-import logging
-
-logger = logging.getLogger(__name__)
-
-logger.level = logging.INFO
 
 FILE_PATH = "/home/unai/datasets/Original_POC Description of operations - Sheet3.csv"
 
 if __name__ == "__main__":
     df = data_logic.data_extraction(FILE_PATH)
 
+<<<<<<< HEAD
     few_data = data_logic.take_few_rows(data=df, num_rows=5)
     few_data["Description"] = np.nan
     few_data["Description"] = few_data["Description"].astype(object)
@@ -78,6 +74,13 @@ if __name__ == "__main__":
 
         # Wait 30 segs (ChatGpt requirement -> 3req/segs)
         time.sleep(30)
+=======
+    data_sample = data_logic.take_few_rows(data=df, num_rows=5)
+
+    data_sample["Description"] = data_sample.apply(
+        data_logic.obtain_organization_description, axis=1
+    )
+>>>>>>> bf1d840 (main refactorized)
 
     new_csv_file = "/home/unai/datasets/Mod_POC Description of operations - Sheet3.csv"
 <<<<<<< HEAD
