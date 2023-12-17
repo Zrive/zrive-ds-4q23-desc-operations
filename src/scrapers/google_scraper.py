@@ -1,6 +1,7 @@
 import sys
 sys.path.append("..")
-from utilities import parser_request_response, request_with_cooloff
+from utilities.web_requests import request_with_cooloff
+from utilities.text_parsers import parser_request_response 
 from credentials import keys
 
 

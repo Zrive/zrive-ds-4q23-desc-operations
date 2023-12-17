@@ -1,7 +1,8 @@
 import sys
 sys.path.append("..")
 from scrapy.crawler import CrawlerProcess
-from utilities import request_with_cooloff, parser_request_response, get_result_lines, MySpider
+from utilities.web_requests import request_with_cooloff, MySpider
+from utilities.text_parsers import parser_request_response, get_result_lines
 from credentials import keys
 
 subscription_key = keys.Bing_API_KEY
