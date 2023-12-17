@@ -5,8 +5,9 @@ from utils.text_parsers import parser_request_response
 from credentials import keys
 
 
-API_KEY = keys.Google_API_KEY
-Search_Engine_ID = keys.Google_Search_Engine_ID
+API_KEY = keys.GOOGLE_API_KEY
+SEARCH_ENGINE_ID = keys.GOOGLE_SEARCH_ENGINE_ID
+API_URL = "https://www.googleapis.com/customsearch/v1"
 
 def build_payload(API_KEY:str, cx:str, query:str, start:int=1, num:int=10, **params):
     """
@@ -34,9 +35,8 @@ def google(query:str) -> str:
     which are short definitions for a web page.
     '''
     try:
-        api_url = "https://www.googleapis.com/customsearch/v1"
-        payload = build_payload(api_key=API_KEY, cx=Search_Engine_ID, q=query)
-        response_json = request_with_cooloff(url=api_url, params=payload)
+        payload = build_payload(api_key=API_KEY, cx=SEARCH_ENGINE_ID, q=query)
+        response_json = request_with_cooloff(url=API_URL, params=payload)
         response_to_parse = str(response_json)
         return parser_request_response(texto_originario=response_to_parse)
     except Exception as e:

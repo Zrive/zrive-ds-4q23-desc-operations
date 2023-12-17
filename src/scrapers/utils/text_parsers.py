@@ -4,7 +4,7 @@ import bs4
 import re
 
 logging.getLogger('readability').propagate = False
-def readability(input_text):
+def readability(input_text:str) -> str:
     '''
     This function will use the readability library to extract the useful information from the text.
     Document is a class in the readability library. That library is (roughly) a python
@@ -19,7 +19,7 @@ def readability(input_text):
     summary_text = soup.get_text()
     return summary_text
 
-def remove_duplicate_empty_lines(input_text):
+def remove_duplicate_empty_lines(input_text:str) -> str:
     '''
     This function removes all duplicate empty lines from the lines
     '''
@@ -33,7 +33,7 @@ def remove_duplicate_empty_lines(input_text):
             fixed_lines.append(line)
     return '\n'.join(fixed_lines)
 
-def get_result_lines(results, shorten):
+def get_result_lines(results:str, shorten:bool) -> str:
     '''
     This function will select only lines with >15 words (thus avoiding titles, headers and no usefull data)
     and if shorten is selected, will retunr the first 50 lines

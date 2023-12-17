@@ -21,7 +21,7 @@ class MySpider(scrapy.Spider):
         super(MySpider, self).__init__(*args, **kwargs)
         self.start_urls = start_url
 
-    def parse(self, response):
+    def parse(self, response:list[str]) -> dict:
         try:
             body_html = response.body.decode('utf-8')
             url = response.url
@@ -44,7 +44,7 @@ class MySpider(scrapy.Spider):
                 'title': '',
                 'useful_text': ''
             })
-    def parse_subpage(self, response):
+    def parse_subpage(self, response:list[str]) -> dict:
         try:
             body_html = response.body.decode('utf-8')
             url = response.url

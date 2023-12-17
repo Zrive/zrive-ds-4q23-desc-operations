@@ -5,9 +5,9 @@ from utils.web_requests import request_with_cooloff, MySpider
 from utils.text_parsers import parser_request_response, get_result_lines
 from credentials import keys
 
-subscription_key = keys.Bing_API_KEY
+SUBSCRIPTION_KEY = keys.BING_API_KEY
 search_url = "https://api.bing.microsoft.com/v7.0/search"
-headers = {"Ocp-Apim-Subscription-Key": subscription_key}
+headers = {"Ocp-Apim-Subscription-Key": SUBSCRIPTION_KEY}
 
 def bing(query:str) -> str:
     """
