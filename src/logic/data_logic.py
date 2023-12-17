@@ -3,8 +3,7 @@ import numpy as np
 
 
 def data_extraction(file_path: str) -> pd.DataFrame:
-    csv_file = "/home/unai/datasets/Original_POC Description of operations - Sheet3.csv"
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(file_path)
     return df
 
 

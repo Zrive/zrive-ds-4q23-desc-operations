@@ -7,6 +7,8 @@ logger = logging.getLogger(__name__)
 
 logger.level = logging.INFO
 
+KEYS_PATH = "keys/open_ai.txt"
+
 
 def chatgpt_call(text: str, company_name: str) -> str:
     api_key = _load_api_key()
@@ -38,17 +40,15 @@ def chatgpt_call(text: str, company_name: str) -> str:
 
 
 def _load_api_key() -> str:
-    file_path = Path(__file__).parent.parent.parent.resolve() / "keys.txt"
     try:
-        with open(file_path, "r") as file:
-            # Lee la primera línea del archivo, que debe contener la clave
+        with open(KEYS_PATH, "r") as file:
             file_line = file.readline().strip()
             pattern = r'"([^"]*)"'
             api_key = re.search(pattern, file_line).group(1)
             return api_key
     except FileNotFoundError:
         logger.warning(
-            f"El archivo {file_path} no se encontró. No se han conseguido las Keys de OPENAI"
+            f"El archivo {KEYS_PATH} no se encontró. No se han conseguido las Keys de OPENAI"
         )
         return None
 

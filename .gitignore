@@ -6,8 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
-#KEYS
-keys.txt
+# data
+data/
+
+# KEYS
+keys/
 
 # Distribution / packaging
 .Python
