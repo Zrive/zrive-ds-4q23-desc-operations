@@ -12,10 +12,6 @@ def data_load(file_path: str) -> pd.DataFrame:
     return df
 
 
-def take_few_rows(data: pd.DataFrame, num_rows: int = 15) -> pd.DataFrame:
-    return data.sample(n=num_rows, random_state=1)
-
-
 def get_description(row: pd.Series) -> str:
     print(row["Company_NAME"])
     html = scraper_web.request_html(row["URL"])
