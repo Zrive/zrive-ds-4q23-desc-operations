@@ -10,10 +10,11 @@ logger = logging.getLogger(__name__)
 
 logger.level = logging.INFO
 
-FILE_PATH = "data/Original_POC Description of operations - Sheet3.csv"
+ORIGINAL_FILE_PATH = "data/Original_POC Description of operations - Sheet3.csv"
+MODIFIED_FILE_PATH = "data/Mod_POC Description of operations - Sheet3.csv"
 
 if __name__ == "__main__":
-    df = data_logic.data_extraction(FILE_PATH)
+    df = data_logic.data_extraction(ORIGINAL_FILE_PATH)
 
     data_sample = data_logic.take_few_rows(data=df, num_rows=5)
     data_sample["Description"] = np.nan
@@ -32,8 +33,6 @@ if __name__ == "__main__":
         description = api_chatgpt.chatgpt_call(text, row["Company_NAME"])
         data_sample.at[i, "Description"] = description
 
-        # Wait 30 segs (ChatGpt requirement -> 3req/segs)
         time.sleep(30)
 
-    new_csv_file = "data/Mod_POC Description of operations - Sheet3.csv"
-    data_sample.to_csv(new_csv_file, index=False, sep=",")
+    data_sample.to_csv(MODIFIED_FILE_PATH, index=False, sep=",")

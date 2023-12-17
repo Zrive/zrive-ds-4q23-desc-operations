@@ -40,7 +40,6 @@ def html_request_with_cooloff(url: str, num_attempts: int = 2):
             else:
                 return "error!:"
 
-        # Catch non 200 return codes on the HTTP header
         except requests.exceptions.HTTPError as e:
             logger.warning(e)
             if response.status_code == 404:
@@ -55,7 +54,6 @@ def html_request_with_cooloff(url: str, num_attempts: int = 2):
             else:
                 return "error!:"
 
-        # We got through the loop without error so we've received a valid response
         soup = BeautifulSoup(response.text, "html.parser")
         return soup
 

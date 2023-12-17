@@ -20,7 +20,6 @@ def chatgpt_call(text: str, company_name: str) -> str:
                       Respira profundamente y trabajo en este problema paso a paso:"""
         + text
     )
-    # Enviar solicitud de completación de chat
     response = client.chat.completions.create(
         model="gpt-3.5-turbo-0301",
         messages=[{"role": "user", "content": message_content}],
