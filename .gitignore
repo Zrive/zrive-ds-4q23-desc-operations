@@ -6,11 +6,16 @@ __pycache__/
 # C extensions
 *.so
 
+<<<<<<< HEAD
 # data
 data/
 
 # KEYS
 keys/
+=======
+#KEYS
+keys.txt
+>>>>>>> b70535e (fixed key exposure)
 
 # Distribution / packaging
 .Python
