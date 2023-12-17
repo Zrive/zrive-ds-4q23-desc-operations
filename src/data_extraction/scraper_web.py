@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 logger.level = logging.INFO
 
 
-def request_html(url: str):
+def request_html(url: str) -> BeautifulSoup:
     url_base = "https://"
     url_complete = url_base + url
     html = html_request_with_cooloff(url_complete)
@@ -29,7 +29,6 @@ def html_request_with_cooloff(url: str, num_attempts: int = 2):
             response = requests.get(url)
             response.raise_for_status()
 
-        # If we're overloading the endpoint it may refuse a connection
         except requests.exceptions.ConnectionError as e:
             logger.info("API refused the connection")
             logger.warning(e)
