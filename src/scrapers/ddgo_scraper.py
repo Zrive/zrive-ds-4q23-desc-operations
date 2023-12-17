@@ -1,7 +1,7 @@
 from duckduckgo_search import ddg
 from scrapy.crawler import CrawlerProcess
-from utilities.web_requests import MySpider
-from utilities.text_parsers import get_result_lines
+from utils.web_requests import MySpider
+from utils.text_parsers import get_result_lines
 def ddgo_query(query:str, numresults:int=2) -> dict:
     '''
     This function performs a search on duckduckgo and returns the results.

@@ -1,8 +1,8 @@
 import sys
 sys.path.append("..")
 from scrapy.crawler import CrawlerProcess
-from utilities.web_requests import request_with_cooloff, MySpider
-from utilities.text_parsers import parser_request_response, get_result_lines
+from utils.web_requests import request_with_cooloff, MySpider
+from utils.text_parsers import parser_request_response, get_result_lines
 from credentials import keys
 
 subscription_key = keys.Bing_API_KEY
@@ -11,14 +11,14 @@ headers = {"Ocp-Apim-Subscription-Key": subscription_key}
 
 def bing(query:str) -> str:
     """
-    Realiza la solicitud a la API, sin contemplar muchos errores.
-    Concatena los bodies de los htmls de las 3 (default) primeras urls
+    Makes a request to the API, without handling many errors.
+    Concatenates the bodies of the HTMLs from the first 3 (default) URLs.
     Parameters:
-    - query (str): La palabra de busqueda.
-    - num_pages (int): El numero de urls de las que se quieren extraer snippets.
+    - query (str): The search term.
+    - num_pages (int): The number of URLs from which snippets are to be extracted.
 
     Returns:
-    - str: el texto texto completo de cada bodie de las num_pages urls
+    - str: The complete text of each body from the num_pages URLs.
     """
     try:
         params = {"q": query,'textFormat':'HTML', 'count': 3, 'offset':0, 'responseFilter':'Webpages',}

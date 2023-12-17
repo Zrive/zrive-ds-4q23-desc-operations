@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
-from utilities.web_requests import request_with_cooloff
-from utilities.text_parsers import parser_request_response 
+from utils.web_requests import request_with_cooloff
+from utils.text_parsers import parser_request_response 
 from credentials import keys
 
 
@@ -10,13 +10,13 @@ Search_Engine_ID = keys.Google_Search_Engine_ID
 
 def build_payload(API_KEY:str, cx:str, query:str, start:int=1, num:int=10, **params):
     """
-    Construye el payload necesario para realizar la solicitud a la API de Google Custom Search.
+    Builds the necessary payload to make a request to the Google Custom Search API.
     Parameters:
-    - api_key (str): La clave de API de Google Custom Search.
-    - cx (str): El identificador de búsqueda personalizado.
-    - query (str): La cadena de búsqueda.
+    - api_key (str): The API key for Google Custom Search.
+    - cx (str): The custom search identifier.
+    - query (str): The search string.
     Returns:
-    - dict: El payload para la solicitud.
+    - dict: The payload for the request.
     """
     payload = {
         'key': API_KEY,

@@ -15,7 +15,6 @@ def readability(input_text):
 
     doc = Document(input_text)
     summary = doc.summary()
-    # the summary is html, so we will use bs4 to extract the text
     soup = bs4.BeautifulSoup(summary, 'html.parser')
     summary_text = soup.get_text()
     return summary_text
@@ -53,18 +52,18 @@ def get_result_lines(results, shorten):
         result_lines.append('\n')
     return result_lines
 
-def parser_request_response(texto_originario:str, Cat_url:bool=False) -> str:
+def parser_request_response(original_text:str, Cat_url:bool=False) -> str:
     '''
     This function will use the bing search results as a text input and will
     return a list object with all URLs associated.
     '''
     if not Cat_url:
-        patron = re.compile(r"'snippet': '(.*?)',")
-        coincidencias = re.findall(patron, texto_originario)
-        resultado_final = '\n'.join(coincidencias)
-        return resultado_final
+        pattern = re.compile(r"'snippet': '(.*?)',")
+        matches = re.findall(pattern, original_text)
+        final_result = '\n'.join(matches)
+        return final_result
     else:
-        patron_url = re.compile(r"'displayUrl': '(.*?)',")
-        urls_encontradas = re.findall(patron_url, texto_originario)
-        urls_filtradas = [url for url in urls_encontradas if 'linkedin' not in url]
-        return urls_filtradas
+        pattern_url = re.compile(r"'displayUrl': '(.*?)',")
+        urls_found = re.findall(pattern_url, original_text)
+        urls_filtered = [url for url in urls_found if 'linkedin' not in url]
+        return urls_filtered
