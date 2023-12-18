@@ -1,5 +1,6 @@
 from src.data_extraction import scraper_web
 from src.data_summarizer import api_chatgpt
+from src.data_summarizer import bart_large_text_summarizer
 import pandas as pd
 import numpy as np
 import time
@@ -12,7 +13,7 @@ def data_load(file_path: str) -> pd.DataFrame:
     return df
 
 
-def get_description(row: pd.Series) -> str:
+def get_description(row: pd.Series, summarizer_selector: int) -> str:
     print(row["Company_NAME"])
     html = scraper_web.request_html(row["URL"])
 
@@ -24,7 +25,11 @@ def get_description(row: pd.Series) -> str:
     if len(text) >= 4096:
         text = text[:4096]
 
-    description = api_chatgpt.chatgpt_call(text, row["Company_NAME"])
+    if summarizer_selector == 0:
+        description = api_chatgpt.chatgpt_call(text, row["Company_NAME"])
+    else:
+        description = bart_large_text_summarizer.get_summary(text)
+
     time.sleep(30)
 
     return description
