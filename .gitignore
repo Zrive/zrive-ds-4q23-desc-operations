@@ -163,6 +163,4 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-src/data/
-
-src/scrapers/credentials
+src/data_extraction/credentials
