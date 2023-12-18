@@ -12,7 +12,6 @@ def readability(input_text:str) -> str:
     extract the useful information from a webpage. We will use the Document class to
     extract the useful information from the text.
     '''
-
     doc = Document(input_text)
     summary = doc.summary()
     soup = bs4.BeautifulSoup(summary, 'html.parser')
@@ -33,23 +32,26 @@ def remove_duplicate_empty_lines(input_text:str) -> str:
             fixed_lines.append(line)
     return '\n'.join(fixed_lines)
 
-def get_result_lines(results:str, shorten:bool) -> str:
+def get_result_lines(results:list[dict[str:str]], shorten:bool) -> str:
     '''
     This function will select only lines with >15 words (thus avoiding titles, headers and no usefull data)
     and if shorten is selected, will retunr the first 50 lines
     '''
     result_lines = []
     for result in results:
-        result_lines.append(f"Title: {result['title']}")
-        result_text = result['useful_text'].replace('\r\n', '')
-        line = result_text.split('\n')
-        filtered_lines = [linea for linea in line if len(linea.split()) > 15]
-        if shorten:
-            result_lines.append("Cleaned Text (shortened):")
-            filtered_lines = filtered_lines['useful_text'].splitlines()[:50]
-        filtered_text = '\n'.join(filtered_lines)
-        result_lines.append(filtered_text)
-        result_lines.append('\n')
+        if result['useful_text']:
+            result_lines.append(f"Title: {result['title']}")
+            result_text = result['useful_text'].replace('\r\n', '')
+            line = result_text.split('\n')
+            filtered_lines = [linea for linea in line if len(linea.split()) > 15]
+            if shorten:
+                result_lines.append("Cleaned Text (shortened):")
+                filtered_lines = filtered_lines['useful_text'].splitlines()[:50]
+            filtered_text = '\n'.join(filtered_lines)
+            result_lines.append(filtered_text)
+            result_lines.append('\n')
+        else:
+            result_lines.append('')
     return result_lines
 
 def parser_request_response(original_text:str, Cat_url:bool=False) -> str:

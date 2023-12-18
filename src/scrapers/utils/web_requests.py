@@ -1,10 +1,11 @@
+import json
 import bs4
 import logging
 import random
 import time
 import requests
 from typing import Dict
-from text_parsers import readability, remove_duplicate_empty_lines
+from utils.text_parsers import readability, remove_duplicate_empty_lines
 
 logging.getLogger('scrapy').propagate = False
 logging.getLogger('urllib3').propagate = False
@@ -15,23 +16,32 @@ class MySpider(scrapy.Spider):
     '''
     This is the spider that will be used to crawl the webpages. We give this to the scrapy crawler.
     '''
-    name = 'my_spider'
+    name = 'myspider'
+    start_urls = None
     results = []
-    def __init__(self, start_url, *args, **kwargs):
-        super(MySpider, self).__init__(*args, **kwargs)
-        self.start_urls = start_url
 
-    def parse(self, response:list[str]) -> dict:
+    def __init__(self, start_urls, *args, **kwargs):
+        super(MySpider, self).__init__(*args, **kwargs)
+        self.start_urls = start_urls
+
+    def start_requests(self):
+        for url in self.start_urls:
+            yield scrapy.Request(url, callback=self.parse)
+
+    def parse(self, response):
         try:
             body_html = response.body.decode('utf-8')
             url = response.url
             soup = bs4.BeautifulSoup(body_html, 'html.parser')
             title = soup.title.string
+            text = soup.get_text()
+            text = remove_duplicate_empty_lines(text) 
             useful_text = readability(body_html)
             useful_text = remove_duplicate_empty_lines(useful_text)
             self.results.append({
                 'url': url,
                 'title': title,
+                'text': text,
                 'useful_text': useful_text
             })
             links = response.css('a::attr(href)').getall()
@@ -40,9 +50,9 @@ class MySpider(scrapy.Spider):
                 yield scrapy.Request(url=link, callback=self.parse_subpage)
         except Exception as e:
             self.results.append({
-                'url': '',
-                'title': '',
-                'useful_text': ''
+            'url': '',
+            'title': '',
+            'useful_text': ''
             })
     def parse_subpage(self, response:list[str]) -> dict:
         try:
@@ -50,23 +60,23 @@ class MySpider(scrapy.Spider):
             url = response.url
             soup = bs4.BeautifulSoup(body_html, 'html.parser')
             title = soup.title.string
-            useful_text = readability(body_html)
-            useful_text = remove_duplicate_empty_lines(useful_text)
+            useful_text = readability(input_text=body_html)
+            useful_text = remove_duplicate_empty_lines(input_text=useful_text)
             self.results.append({
-                'url': url,
-                'title': title,
-                'useful_text': useful_text
+            'url': url,
+            'title': title,
+            'useful_text': useful_text
             })
         except Exception as e:
             self.results.append({
-                'url': '',
-                'title': '',
-                'useful_text': ''
+            'url': '',
+            'title': '',
+            'useful_text': ''
             })
 
 logger = logging.getLogger(__name__)
-def request_with_cooloff(
-    session: requests.Session, url: str, headers: Dict[str, any], params: Dict[str, any], num_attempts: int=5
+def _request_with_cooloff(
+    url: str, headers: Dict[str, any], params: Dict[str, any], num_attempts: int
 ):
     """
     Call the url using requests. If the endpoint returns an error wait a cooloff
@@ -75,7 +85,7 @@ def request_with_cooloff(
     cooloff = 1
     for call_count in range(num_attempts):
         try:
-            response = session.get(url, headers=headers, params=params)
+            response = requests.get(url, headers=headers, params=params)
             response.raise_for_status()
         except requests.exceptions.ConnectionError as e:
             logger.info("API refused the connection")
@@ -99,3 +109,19 @@ def request_with_cooloff(
                 continue
             else:
                 raise
+        return response
+    
+def request_with_cooloff(
+    url: str,
+    headers: Dict[str, any],
+    params: Dict[str, any],
+    num_attempts: int = 3
+):
+    return json.loads(
+        _request_with_cooloff(
+            url,
+            headers,
+            params,
+            num_attempts
+        ).content.decode("utf-8")
+    )

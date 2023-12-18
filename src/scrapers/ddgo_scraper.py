@@ -1,8 +1,8 @@
 from duckduckgo_search import ddg
 from scrapy.crawler import CrawlerProcess
-from utils.web_requests import MySpider
-from utils.text_parsers import get_result_lines
-def ddgo_query(query:str, numresults:int=2) -> dict:
+from utils import web_requests, text_parsers
+
+def _ddgo_query(query:str, numresults:int=1) -> list:
     '''
     This function performs a search on duckduckgo and returns the results.
     It uses the scrapy library to download the pages and extract the useful information.
@@ -11,30 +11,27 @@ def ddgo_query(query:str, numresults:int=2) -> dict:
     
     query: the query to search for
     numresults: the number of results to return
-    clean_with_llm: if True, use openai to clean the text. If False, use readability.
-    loglevel: the log level to use, a string. Can be DEBUG, INFO, WARNING, ERROR, or CRITICAL.
     '''
-
     results = ddg(query, max_results=numresults)
     urls = [result['href'] for result in results]
     urls = urls[:numresults]
     if urls:
         process = CrawlerProcess()
-        process.crawl(MySpider, urls[0])
+        process.crawl(web_requests.MySpider, urls)
         process.start()
-        return MySpider.results
+        return web_requests.MySpider.results
     else:
         return None
 
-def duckduckgo_search(query:str, numresults:int=3) -> str:
+def duckduckgo_search(query:str, numresults:int=1) -> str:
     '''
     This function gather the duckduckgo search (via the Scrapy.Spider) and the get_result_lines()
     function to parse the results and perform a clean text.
     '''
     try:
-        results = ddgo_query(query, numresults)
-        result_lines = get_result_lines(results, shorten=False)
+        results = _ddgo_query(query=query, numresults=numresults)
+        result_lines = text_parsers.get_result_lines(results=results, shorten=False)
         return '\n'.join(result_lines)
     except Exception as e:
-        print(f"Error en duckduckgo para {query}: {e}")
+        print(f"Error for duckduckgo in {query}: {e}")
         return None

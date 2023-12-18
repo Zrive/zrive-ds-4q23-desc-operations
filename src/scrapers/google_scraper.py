@@ -1,15 +1,10 @@
-import sys
-sys.path.append("..")
-from utils.web_requests import request_with_cooloff
-from utils.text_parsers import parser_request_response 
+from utils import web_requests, text_parsers
 from credentials import keys
-
-
 API_KEY = keys.GOOGLE_API_KEY
 SEARCH_ENGINE_ID = keys.GOOGLE_SEARCH_ENGINE_ID
 API_URL = "https://www.googleapis.com/customsearch/v1"
 
-def build_payload(API_KEY:str, cx:str, query:str, start:int=1, num:int=10, **params):
+def build_payload(API_KEY:str, cx:str, query:str, start:int=1, **params):
     """
     Builds the necessary payload to make a request to the Google Custom Search API.
     Parameters:
@@ -23,7 +18,6 @@ def build_payload(API_KEY:str, cx:str, query:str, start:int=1, num:int=10, **par
         'key': API_KEY,
         'q':query,
         'cx': cx,
-        'num': num,
         'fileType': 'html'
     }
     payload.update(params)
@@ -35,10 +29,10 @@ def google(query:str) -> str:
     which are short definitions for a web page.
     '''
     try:
-        payload = build_payload(api_key=API_KEY, cx=SEARCH_ENGINE_ID, q=query)
-        response_json = request_with_cooloff(url=API_URL, params=payload)
+        payload = build_payload(API_KEY=API_KEY, cx=SEARCH_ENGINE_ID, query=query)
+        response_json = web_requests.request_with_cooloff(url=API_URL, headers={}, params=payload)
         response_to_parse = str(response_json)
-        return parser_request_response(texto_originario=response_to_parse)
+        return text_parsers.parser_request_response(original_text=response_to_parse)
     except Exception as e:
-        print(f"Error en google_v2 para {query}: {e}")
+        print(f"Error en google para {query}: {e}")
         return None
