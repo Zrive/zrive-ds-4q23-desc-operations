@@ -1,15 +1,22 @@
-import sys
-sys.path.append("..")
 from scrapy.crawler import CrawlerProcess
-from utils.web_requests import request_with_cooloff, MySpider
-from utils.text_parsers import parser_request_response, get_result_lines
 from credentials import keys
+from utils import web_requests, text_parsers
+
 
 SUBSCRIPTION_KEY = keys.BING_API_KEY
-search_url = "https://api.bing.microsoft.com/v7.0/search"
-headers = {"Ocp-Apim-Subscription-Key": SUBSCRIPTION_KEY}
+SEARCH_URL = "https://api.bing.microsoft.com/v7.0/search"
+HEADERS = {"Ocp-Apim-Subscription-Key": SUBSCRIPTION_KEY}
 
-def bing(query:str) -> str:
+def _bing_query(query:str, numresults:int=1) -> dict:
+    try:
+        params = {"q": query,'textFormat':'HTML', 'count': numresults, 'offset':0, 'responseFilter':'Webpages'}
+        response = web_requests.request_with_cooloff(url=SEARCH_URL, headers=HEADERS, params=params)
+        return response
+    except Exception as e:
+        print(f"Error in bing for {query}: {e}")
+        return None
+    
+def bing(query:dict[str:str]) -> str:
     """
     Makes a request to the API, without handling many errors.
     Concatenates the bodies of the HTMLs from the first 3 (default) URLs.
@@ -21,24 +28,21 @@ def bing(query:str) -> str:
     - str: The complete text of each body from the num_pages URLs.
     """
     try:
-        params = {"q": query,'textFormat':'HTML', 'count': 3, 'offset':0, 'responseFilter':'Webpages',}
-        response = request_with_cooloff(search_url, headers=headers, params=params)
-        response.raise_for_status()
-        search_results = response.json()
-        search_results_pages = str(search_results['webPages']['value'])
-        if (search_results_pages is not None) and (parser_request_response(texto_originario=search_results_pages, Cat_url=True) is not None):
-            urls = parser_request_response(texto_originario=search_results_pages, Cat_url=True)
+        query_result = _bing_query(query=query)
+        search_results_pages = str(query_result['webPages']['value'])
+        if (search_results_pages is not None) and (text_parsers.parser_request_response(original_text=search_results_pages, Cat_url=True) is not None):
+            urls = text_parsers.parser_request_response(original_text=search_results_pages, Cat_url=True)
             try:
                 process = CrawlerProcess()
-                process.crawl(MySpider, urls[0])
+                process.crawl(web_requests.MySpider, urls)
                 process.start()
-                results = MySpider.results
-                result_lines = get_result_lines(results, shorten=False)
-                return result_lines
+                results = web_requests.MySpider.results
+                result_lines = text_parsers.get_result_lines(results=results, shorten=False)
+                return '\n'.join(result_lines)
             except Exception as e:
                 return f'Exception ({e}) error'
         else:
             return None
     except Exception as e:
-        print(f"Error en bing_v2 para {query}: {e}")
+        print(f"Error in bing for {query}: {e}")
         return None
