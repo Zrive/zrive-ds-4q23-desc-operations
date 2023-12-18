@@ -8,6 +8,7 @@ MODIFIED_FILE_PATH1 = "data/FUNCIONA_H.csv"
 
 # If SUMMARIZER_SELECTOR is 0, Code will execute api_chatgpt. For other cases, hugging_face model
 SUMMARIZER_SELECTOR = 1
+
 def main():
   
     data = data_logic.data_load(ORIGINAL_FILE_PATH)
