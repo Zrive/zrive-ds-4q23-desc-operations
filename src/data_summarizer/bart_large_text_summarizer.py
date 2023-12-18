@@ -3,7 +3,6 @@ import pandas as pd
 
 MODEL = "Azma-AI/bart-large-text-summarizer"
 
-
 def generate_summary(description: str) -> str:
     summarizer = pipeline("summarization", MODEL)
 
@@ -38,18 +37,6 @@ def generate_summary(description: str) -> str:
         return pd.NA
 
 
-def get_summary(df: pd.DataFrame) -> pd.DataFrame:
-    df["summary_azma_ai_model"] = None
-
-    for index, row in df.iterrows():
-        description = str(row["WEB"])
-
-        if pd.notna(description) and len(description) > 3:
-            summary = generate_summary(description)
-
-            df.at[index, "summary_azma_ai_model"] = summary
-        else:
-            df.at[index, "summary_azma_ai_model"] = pd.NA
-
-    return df
-
+def get_summary(text: str) -> str:
+    summary = generate_summary(text)
+    return summary
