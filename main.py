@@ -22,6 +22,7 @@ from src.Hugging_face_summarizer.Hugging_face_sum1 import get_summary
 >>>>>>> b50d2f2 (Take the final summarizer in src and change path in main)
 =======
 from src.data_summarizer.bart_large_text_summarizer import get_summary
+<<<<<<< HEAD
 >>>>>>> fb3aed8 (Changes)
 import pandas as pd
 
@@ -48,6 +49,11 @@ from src.logic import data_logic
 import pandas as pd
 import time
 import numpy as np
+=======
+from src.data_processing import data_logic
+
+
+>>>>>>> 18280b1 (tt)
 
 FILE_PATH = "/home/unai/datasets/Original_POC Description of operations - Sheet3.csv"
 
