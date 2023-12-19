@@ -1,5 +1,6 @@
 import wikipediaapi
 
+
 def wikipedia(query: str):
     """
     Call the wikipediaapi for a query search and extract the full web page. No

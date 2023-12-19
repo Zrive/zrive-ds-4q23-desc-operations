@@ -1,3 +1,4 @@
+import scrapy
 import json
 import bs4
 import logging
@@ -11,7 +12,6 @@ logging.getLogger("scrapy").propagate = False
 logging.getLogger("urllib3").propagate = False
 logging.getLogger("httpcore").propagate = False
 
-import scrapy
 
 
 class MySpider(scrapy.Spider):

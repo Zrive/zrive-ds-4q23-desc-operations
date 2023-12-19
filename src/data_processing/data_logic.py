@@ -32,6 +32,7 @@ def get_description(row: pd.Series, summarizer_selector: int) -> str:
         for function in search_engine_funcitons:
             try:
                 text = function(row["Company_NAME"])
+                break
             except Exception as e:
                 print(f"Error in {function.__name__}: {e}")
         return np.nan
@@ -39,13 +40,13 @@ def get_description(row: pd.Series, summarizer_selector: int) -> str:
         text = scraper_web.clean_html_text(html)
         if len(text) >= 4096:
             text = text[:4096]
-    
+
     if summarizer_selector == 0:
         description = api_chatgpt.chatgpt_call(text, row["Company_NAME"])
 
     elif summarizer_selector == 1:
         description = bart_large_text_summarizer.get_summary(text)
-    
+
     else:
         raise ValueError("The value of  'SUMMARIZER_SELECTOR' must be 0 or 1")
 

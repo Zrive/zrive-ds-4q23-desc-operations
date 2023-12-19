@@ -15,7 +15,7 @@ def chatgpt_call(text: str, company_name: str) -> str:
     client = OpenAI(api_key=api_key)
 
     message_content = (
-        f"""me haces un resumen de este html de la empresa {company_name}, 
+        f"""me haces un resumen de este html de la empresa {company_name},
                     en un maximo de 3 lineas que resuma a que se dedica dicha empresa por favor.
                       Respira profundamente y trabajo en este problema paso a paso:"""
         + text
