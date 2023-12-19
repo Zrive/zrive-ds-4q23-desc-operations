@@ -19,7 +19,7 @@ def data_load(file_path: str) -> pd.DataFrame:
     return df
 
 
-def get_description(row: pd.Series) -> str:
+def get_description(row: pd.Series, summarizer_selector: int) -> str:
     print(row["Company_NAME"])
     html = scraper_web.request_html(row["URL"])
     if str(html).lower().find("error!:") != -1:
