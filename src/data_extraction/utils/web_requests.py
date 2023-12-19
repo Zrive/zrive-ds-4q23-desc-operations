@@ -7,16 +7,19 @@ import requests
 from typing import Dict
 from utils.text_parsers import readability, remove_duplicate_empty_lines
 
-logging.getLogger('scrapy').propagate = False
-logging.getLogger('urllib3').propagate = False
-logging.getLogger('httpcore').propagate = False
+logging.getLogger("scrapy").propagate = False
+logging.getLogger("urllib3").propagate = False
+logging.getLogger("httpcore").propagate = False
 
 import scrapy
+
+
 class MySpider(scrapy.Spider):
-    '''
+    """
     This is the spider that will be used to crawl the webpages. We give this to the scrapy crawler.
-    '''
-    name = 'myspider'
+    """
+
+    name = "myspider"
     start_urls = None
     results = []
 
@@ -30,49 +33,38 @@ class MySpider(scrapy.Spider):
 
     def parse(self, response):
         try:
-            body_html = response.body.decode('utf-8')
+            body_html = response.body.decode("utf-8")
             url = response.url
-            soup = bs4.BeautifulSoup(body_html, 'html.parser')
+            soup = bs4.BeautifulSoup(body_html, "html.parser")
             title = soup.title.string
             text = soup.get_text()
-            text = remove_duplicate_empty_lines(text) 
+            text = remove_duplicate_empty_lines(text)
             useful_text = readability(body_html)
             useful_text = remove_duplicate_empty_lines(useful_text)
-            self.results.append({
-                'url': url,
-                'title': title,
-                'text': text,
-                'useful_text': useful_text
-            })
-            links = response.css('a::attr(href)').getall()
+            self.results.append(
+                {"url": url, "title": title, "text": text, "useful_text": useful_text}
+            )
+            links = response.css("a::attr(href)").getall()
             selected_links = random.sample(links, min(3, len(links)))
             for link in selected_links:
                 yield scrapy.Request(url=link, callback=self.parse_subpage)
         except Exception as e:
-            self.results.append({
-            'url': '',
-            'title': '',
-            'useful_text': ''
-            })
-    def parse_subpage(self, response:list[str]) -> dict:
+            self.results.append({"url": "", "title": "", "useful_text": ""})
+
+    def parse_subpage(self, response: list[str]) -> dict:
         try:
-            body_html = response.body.decode('utf-8')
+            body_html = response.body.decode("utf-8")
             url = response.url
-            soup = bs4.BeautifulSoup(body_html, 'html.parser')
+            soup = bs4.BeautifulSoup(body_html, "html.parser")
             title = soup.title.string
             useful_text = readability(input_text=body_html)
             useful_text = remove_duplicate_empty_lines(input_text=useful_text)
-            self.results.append({
-            'url': url,
-            'title': title,
-            'useful_text': useful_text
-            })
+            self.results.append(
+                {"url": url, "title": title, "useful_text": useful_text}
+            )
         except Exception as e:
-            self.results.append({
-            'url': '',
-            'title': '',
-            'useful_text': ''
-            })
+            self.results.append({"url": "", "title": "", "useful_text": ""})
+
 
 def _request_with_cooloff(
     url: str, headers: Dict[str, any], params: Dict[str, any], num_attempts: int
@@ -105,18 +97,13 @@ def _request_with_cooloff(
             else:
                 raise
         return response
-    
+
+
 def request_with_cooloff(
-    url: str,
-    headers: Dict[str, any],
-    params: Dict[str, any],
-    num_attempts: int = 3
+    url: str, headers: Dict[str, any], params: Dict[str, any], num_attempts: int = 3
 ):
     return json.loads(
-        _request_with_cooloff(
-            url,
-            headers,
-            params,
-            num_attempts
-        ).content.decode("utf-8")
+        _request_with_cooloff(url, headers, params, num_attempts).content.decode(
+            "utf-8"
+        )
     )

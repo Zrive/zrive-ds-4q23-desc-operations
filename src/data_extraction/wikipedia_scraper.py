@@ -1,5 +1,6 @@
 import wikipediaapi
 
+
 def wikipedia(query: str):
     global wiki_wiki
     try:

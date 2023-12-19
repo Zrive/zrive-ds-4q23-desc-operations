@@ -1,4 +1,10 @@
-from src.data_extraction import scraper_web, bing_scraper, ddgo_scraper, google_scraper, wikipedia_scraper
+from src.data_extraction import (
+    scraper_web,
+    bing_scraper,
+    ddgo_scraper,
+    google_scraper,
+    wikipedia_scraper,
+)
 from src.data_summarizer import api_chatgpt
 from src.data_summarizer import bart_large_text_summarizer
 import pandas as pd
@@ -12,16 +18,17 @@ def data_load(file_path: str) -> pd.DataFrame:
     df["Description"] = df["Description"].astype(object)
     return df
 
+
 def get_description(row: pd.Series) -> str:
     print(row["Company_NAME"])
     html = scraper_web.request_html(row["URL"])
     if str(html).lower().find("error!:") != -1:
         search_engine_funcitons = [
-                                   bing_scraper.bing,
-                                   ddgo_scraper.ddg,
-                                   google_scraper.google,
-                                   wikipedia_scraper.wikipedia
-                                   ]
+            bing_scraper.bing,
+            ddgo_scraper.ddg,
+            google_scraper.google,
+            wikipedia_scraper.wikipedia,
+        ]
         for function in search_engine_funcitons:
             try:
                 text = function(row["Company_NAME"])
