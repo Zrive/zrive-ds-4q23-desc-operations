@@ -3,6 +3,7 @@ import pandas as pd
 
 MODEL = "Azma-AI/bart-large-text-summarizer"
 
+
 def generate_summary(description: str) -> str:
     summarizer = pipeline("summarization", MODEL)
 
