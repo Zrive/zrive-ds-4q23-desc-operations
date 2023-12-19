@@ -16,7 +16,7 @@ def _bing_query(query:str, numresults:int=1) -> dict:
         print(f"Error in bing for {query}: {e}")
         return None
     
-def bing(query:dict[str:str]) -> str:
+def bing(query:str) -> str:
     """
     Makes a request to the API, without handling many errors.
     Concatenates the bodies of the HTMLs from the first 3 (default) URLs.

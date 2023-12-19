@@ -74,7 +74,6 @@ class MySpider(scrapy.Spider):
             'useful_text': ''
             })
 
-logger = logging.getLogger(__name__)
 def _request_with_cooloff(
     url: str, headers: Dict[str, any], params: Dict[str, any], num_attempts: int
 ):
@@ -88,8 +87,6 @@ def _request_with_cooloff(
             response = requests.get(url, headers=headers, params=params)
             response.raise_for_status()
         except requests.exceptions.ConnectionError as e:
-            logger.info("API refused the connection")
-            logger.warning(e)
             if call_count != (num_attempts - 1):
                 time.sleep(cooloff)
                 cooloff *= 2
@@ -98,10 +95,8 @@ def _request_with_cooloff(
             else:
                 raise
         except requests.exceptions.HTTPError as e:
-            logger.warning(e)
             if response.status_code == 404:
                 raise
-            logger.info(f"API return code {response.status_code} cooloff at {cooloff}")
             if call_count != (num_attempts - 1):
                 time.sleep(cooloff)
                 cooloff *= 2
