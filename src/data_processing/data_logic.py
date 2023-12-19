@@ -27,8 +27,12 @@ def get_description(row: pd.Series, summarizer_selector: int) -> str:
 
     if summarizer_selector == 0:
         description = api_chatgpt.chatgpt_call(text, row["Company_NAME"])
-    else:
+
+    elif summarizer_selector == 1:
         description = bart_large_text_summarizer.get_summary(text)
+    
+    else:
+        raise ValueError("The value of  'SUMMARIZER_SELECTOR' must be 0 or 1")
 
     time.sleep(30)
 
