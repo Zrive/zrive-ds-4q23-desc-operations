@@ -84,7 +84,7 @@ def _request_with_cooloff(
     cooloff = 1
     for call_count in range(num_attempts):
         try:
-            response = requests.get(url, headers=headers, params=params)
+            response = requests.get(url, headers=headers, params=params, timeout=360)
             response.raise_for_status()
         except requests.exceptions.ConnectionError as e:
             if call_count != (num_attempts - 1):

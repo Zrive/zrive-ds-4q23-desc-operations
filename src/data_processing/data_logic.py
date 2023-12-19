@@ -12,23 +12,19 @@ def data_load(file_path: str) -> pd.DataFrame:
     df["Description"] = df["Description"].astype(object)
     return df
 
-
-def get_description(row: pd.Series, summarizer_selector: int) -> str:
+def get_description(row: pd.Series) -> str:
     print(row["Company_NAME"])
     html = scraper_web.request_html(row["URL"])
-
     if str(html).lower().find("error!:") != -1:
         search_engine_funcitons = [
                                    bing_scraper.bing,
-                                   lambda q: ddgo_scraper.duckduckgo_search(q, numresults=1),
+                                   ddgo_scraper.ddg,
                                    google_scraper.google,
                                    wikipedia_scraper.wikipedia
                                    ]
         for function in search_engine_funcitons:
             try:
                 text = function(row["Company_NAME"])
-                if text and isinstance(text, str):
-                    return text
             except Exception as e:
                 print(f"Error in {function.__name__}: {e}")
         return np.nan

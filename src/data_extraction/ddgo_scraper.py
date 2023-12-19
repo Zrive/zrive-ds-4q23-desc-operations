@@ -35,3 +35,6 @@ def duckduckgo_search(query:str, numresults:int=1) -> str:
     except Exception as e:
         print(f"Error for duckduckgo in {query}: {e}")
         return None
+    
+def ddgo(query:str) -> str:
+    return duckduckgo_search(query, numresults=1)
