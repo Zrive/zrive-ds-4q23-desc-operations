@@ -1,12 +1,15 @@
 from src.data_processing import data_logic
-from src.data_summarizer.bart_large_text_summarizer import get_summary
 
 
-ORIGINAL_FILE_PATH = "data/PROBANDO.csv"
-MODIFIED_FILE_PATH = "data/FUNCIONA_C.csv"
-MODIFIED_FILE_PATH1 = "data/FUNCIONA_H.csv"
+ORIGINAL_FILE_PATH = "data/Original_POC Description of operations - Sheet3.csv"
+MODIFIED_FILE_PATH = "data/Mod_POC Description of operations - Sheet3.csv"
 
-# If SUMMARIZER_SELECTOR is 0, Code will execute api_chatgpt. For other cases, hugging_face model
+
+""" 
+If SUMMARIZER_SELECTOR is 0, Code will execute api_chatgpt. 
+If SUMMARIZER_SELECTOR is 1, Code will execute hugging_face model
+For other cases, ERROR
+"""
 SUMMARIZER_SELECTOR = 1
 
 def main():
@@ -17,7 +20,7 @@ def main():
 
     data_sample["Description"] = data_sample.apply(data_logic.get_description, axis=1, summarizer_selector = SUMMARIZER_SELECTOR)
     
-    data_sample.to_csv(MODIFIED_FILE_PATH1, index=False, sep=",")
+    data_sample.to_csv(MODIFIED_FILE_PATH, index=False, sep=",")
    
     
 
