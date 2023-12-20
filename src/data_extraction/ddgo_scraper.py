@@ -1,6 +1,6 @@
 from duckduckgo_search import ddg
 from scrapy.crawler import CrawlerProcess
-from utils import web_requests, text_parsers
+from src.data_extraction.utils import web_requests, text_parsers
 
 
 def _ddgo_query(query: str, numresults: int = 1) -> list:
@@ -22,7 +22,7 @@ def _ddgo_query(query: str, numresults: int = 1) -> list:
         process.start()
         return web_requests.MySpider.results
     else:
-        return None
+        return f"ERROR!: 555 "
 
 
 def duckduckgo_search(query: str, numresults: int = 1) -> str:
@@ -36,7 +36,7 @@ def duckduckgo_search(query: str, numresults: int = 1) -> str:
         return "\n".join(result_lines)
     except Exception as e:
         print(f"Error for duckduckgo in {query}: {e}")
-        return None
+        return f"ERROR!: 555 "
 
 
 def ddgo(query: str) -> str:

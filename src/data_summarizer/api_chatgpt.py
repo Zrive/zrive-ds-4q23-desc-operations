@@ -1,5 +1,6 @@
 from openai import OpenAI
 from pathlib import Path
+from src.data_extraction.utils import keys
 import logging
 import re
 
@@ -7,11 +8,11 @@ logger = logging.getLogger(__name__)
 
 logger.level = logging.INFO
 
-KEYS_PATH = "keys/open_ai.txt"
+OPENAI_KEYS_PATH = "keys/open_ai.txt"
 
 
 def chatgpt_call(text: str, company_name: str) -> str:
-    api_key = _load_api_key()
+    api_key = keys.load_api_key(OPENAI_KEYS_PATH)
     client = OpenAI(api_key=api_key)
 
     message_content = (
@@ -35,20 +36,6 @@ def chatgpt_call(text: str, company_name: str) -> str:
             return "COMPANY_NAME and URL not exact"
         return content
     else:
-        return None
-
-
-def _load_api_key() -> str:
-    try:
-        with open(KEYS_PATH, "r") as file:
-            file_line = file.readline().strip()
-            pattern = r'"([^"]*)"'
-            api_key = re.search(pattern, file_line).group(1)
-            return api_key
-    except FileNotFoundError:
-        logger.warning(
-            f"El archivo {KEYS_PATH} no se encontró. No se han conseguido las Keys de OPENAI"
-        )
         return None
 
 

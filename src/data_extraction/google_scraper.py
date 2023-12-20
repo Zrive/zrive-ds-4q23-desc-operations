@@ -1,8 +1,8 @@
-from utils import web_requests, text_parsers
-from credentials import keys
+from src.data_extraction.utils import web_requests, text_parsers, keys
+import json
 
-API_KEY = keys.GOOGLE_API_KEY
-SEARCH_ENGINE_ID = keys.GOOGLE_SEARCH_ENGINE_ID
+GOOGLE_API_KEY_PATH = "keys/google.txt"
+SEARCH_ENGINE_ID_PATH = "keys/search_engine_id.txt"
 API_URL = "https://www.googleapis.com/customsearch/v1"
 
 
@@ -27,12 +27,15 @@ def google(query: str) -> str:
     which are short definitions for a web page.
     """
     try:
-        payload = build_payload(API_KEY=API_KEY, cx=SEARCH_ENGINE_ID, query=query)
-        response_json = web_requests.request_with_cooloff(
+        api_key = keys.load_api_key(GOOGLE_API_KEY_PATH)
+        search_engine_id = keys.load_api_key(SEARCH_ENGINE_ID_PATH)
+        payload = build_payload(API_KEY=api_key, cx=search_engine_id, query=query)
+        response = web_requests.request_with_cooloff(
             url=API_URL, headers={}, params=payload
         )
+        response_json = json.loads(response.content.decode("utf-8"))
         response_to_parse = str(response_json)
         return text_parsers.parser_request_response(original_text=response_to_parse)
     except Exception as e:
         print(f"Error en google para {query}: {e}")
-        return None
+        return f"ERROR!: {response.status_code}"
