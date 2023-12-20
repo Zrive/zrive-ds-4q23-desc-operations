@@ -6,12 +6,14 @@ import random
 import time
 import requests
 from typing import Dict
-from utils.text_parsers import readability, remove_duplicate_empty_lines
+from src.data_extraction.utils.text_parsers import (
+    readability,
+    remove_duplicate_empty_lines,
+)
 
 logging.getLogger("scrapy").propagate = False
 logging.getLogger("urllib3").propagate = False
 logging.getLogger("httpcore").propagate = False
-
 
 
 class MySpider(scrapy.Spider):

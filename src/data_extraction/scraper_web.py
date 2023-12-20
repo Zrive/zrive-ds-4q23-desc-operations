@@ -17,7 +17,7 @@ def request_html(url: str) -> BeautifulSoup:
     return html
 
 
-def html_request_with_cooloff(url: str, num_attempts: int = 2):
+def html_request_with_cooloff(url: str, num_attempts: int = 2) -> BeautifulSoup:
     """
     Call the url using requests. If the endpoint returns an error wait a cooloff
     period and try again, doubling the period each attempt up to a max num_attempts.
@@ -26,7 +26,7 @@ def html_request_with_cooloff(url: str, num_attempts: int = 2):
 
     for call_count in range(num_attempts):
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             response.raise_for_status()
 
         except requests.exceptions.ConnectionError as e:

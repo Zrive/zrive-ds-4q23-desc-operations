@@ -1,6 +1,6 @@
 from duckduckgo_search import ddg
 from scrapy.crawler import CrawlerProcess
-from utils import web_requests, text_parsers
+from src.data_extraction.utils import web_requests, text_parsers
 
 
 def _ddgo_query(query: str, numresults: int = 1) -> list:

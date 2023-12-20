@@ -1,11 +1,9 @@
 from scrapy.crawler import CrawlerProcess
-from credentials import keys
-from utils import web_requests, text_parsers
+from src.data_extraction.utils import web_requests, text_parsers, keys
 
 
-SUBSCRIPTION_KEY = keys.BING_API_KEY
 SEARCH_URL = "https://api.bing.microsoft.com/v7.0/search"
-HEADERS = {"Ocp-Apim-Subscription-Key": SUBSCRIPTION_KEY}
+BING_KEYS_PATH = "keys/bing.txt"
 
 
 def _bing_query(query: str, numresults: int = 1) -> dict:
@@ -17,8 +15,10 @@ def _bing_query(query: str, numresults: int = 1) -> dict:
             "offset": 0,
             "responseFilter": "Webpages",
         }
+        api_key = keys.load_api_key(BING_KEYS_PATH)
+        headers = {"Ocp-Apim-Subscription-Key": api_key}
         response = web_requests.request_with_cooloff(
-            url=SEARCH_URL, headers=HEADERS, params=params
+            url=SEARCH_URL, headers=headers, params=params
         )
         return response
     except Exception as e:
