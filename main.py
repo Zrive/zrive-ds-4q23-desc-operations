@@ -23,13 +23,13 @@ STATUS:
 def main():
     data = data_logic.data_load(ORIGINAL_FILE_PATH)
 
-    data_sample = data.sample(n=3, random_state=1)
+    # data_sample = data.sample(n=3, random_state=1)
 
-    data_sample[["Description", "Status"]] = data_sample.apply(
+    data[["Description", "Status", "Error"]] = data.apply(
         data_logic.get_description, axis=1, summarizer_selector=SUMMARIZER_SELECTOR
     )
 
-    data_sample.to_csv(MODIFIED_FILE_PATH, index=False, sep=",")
+    data.to_csv(MODIFIED_FILE_PATH, index=False, sep=",")
 
 
 if __name__ == "__main__":

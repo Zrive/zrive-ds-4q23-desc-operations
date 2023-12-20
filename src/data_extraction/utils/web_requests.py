@@ -104,8 +104,4 @@ def _request_with_cooloff(
 def request_with_cooloff(
     url: str, headers: Dict[str, any], params: Dict[str, any], num_attempts: int = 3
 ):
-    return json.loads(
-        _request_with_cooloff(url, headers, params, num_attempts).content.decode(
-            "utf-8"
-        )
-    )
+    return _request_with_cooloff(url, headers, params, num_attempts)

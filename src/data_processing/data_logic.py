@@ -7,6 +7,7 @@ from src.data_extraction import (
 )
 from src.data_summarizer import api_chatgpt
 from src.data_summarizer import bart_large_text_summarizer
+from src.data_extraction.utils import error_parser
 import pandas as pd
 import numpy as np
 import time
@@ -18,10 +19,13 @@ def data_load(file_path: str) -> pd.DataFrame:
     df["Description"] = df["Description"].astype(object)
     df["Status"] = np.nan
     df["Status"] = df["Status"].astype(object)
+    df["Error"] = np.nan
+    df["Error"] = df["Error"].astype(object)
     return df
 
 
-def get_description(row: pd.Series, summarizer_selector: int) -> tuple[str, int]:
+def get_description(row: pd.Series, summarizer_selector: int) -> tuple[str, int, str]:
+    error = ";"
     status = 0
     print(row["Company_NAME"])
 
@@ -34,16 +38,19 @@ def get_description(row: pd.Series, summarizer_selector: int) -> tuple[str, int]
             google_scraper.google,
             wikipedia_scraper.wikipedia,
         ]
+        error = error + error_parser.parse_error(html)
         for i, function in enumerate(search_engine_funcitons, start=1):
             try:
-                print("HOLAAAAA")
                 status = status + 1
                 text = function(row["Company_NAME"])
-                if text and isinstance(text, str):
+                if str(text).lower().find("error!:") == -1 and (
+                    text and isinstance(text, str)
+                ):
                     break
+                error = error + error_parser.parse_error(text)
                 if i > 3:
                     status = status + 1
-                    return pd.Series([np.nan, status])
+                    return pd.Series([np.nan, status, error])
             except Exception as e:
                 print(f"Error in {function.__name__}: {e}")
     else:
@@ -53,7 +60,7 @@ def get_description(row: pd.Series, summarizer_selector: int) -> tuple[str, int]
 
     if summarizer_selector == 0:
         description = api_chatgpt.chatgpt_call(text, row["Company_NAME"])
-        time.sleep(25)
+        # time.sleep(20)
 
     elif summarizer_selector == 1:
         description = bart_large_text_summarizer.get_summary(text)
@@ -61,4 +68,4 @@ def get_description(row: pd.Series, summarizer_selector: int) -> tuple[str, int]
     else:
         raise ValueError("The value of  'SUMMARIZER_SELECTOR' must be 0 or 1")
 
-    return pd.Series([description, status])
+    return pd.Series([description, status, error])

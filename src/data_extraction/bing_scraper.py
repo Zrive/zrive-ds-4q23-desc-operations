@@ -23,7 +23,7 @@ def _bing_query(query: str, numresults: int = 1) -> dict:
         return response
     except Exception as e:
         print(f"Error in bing for {query}: {e}")
-        return None
+        return f"ERROR!: {response.status_code}"
 
 
 def bing(query: str) -> str:
@@ -39,6 +39,8 @@ def bing(query: str) -> str:
     """
     try:
         query_result = _bing_query(query=query)
+        if str(query_result).lower().find("error!:") != -1:
+            return query_result
         search_results_pages = str(query_result["webPages"]["value"])
         if (search_results_pages is not None) and (
             text_parsers.parser_request_response(
