@@ -4,7 +4,9 @@ import wikipediaapi
 def wikipedia(query: str):
     """
     Call the wikipediaapi for a query search and extract the full web page. No
-    correction applied if the query result and the Company Name doesn't match
+    correction applied if the query result and the Company Name doesn't match.
+
+    query: The search term.
     """
     global wiki_wiki
     try:

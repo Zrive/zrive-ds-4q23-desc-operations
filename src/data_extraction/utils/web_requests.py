@@ -18,7 +18,9 @@ logging.getLogger("httpcore").propagate = False
 
 class MySpider(scrapy.Spider):
     """
-    This is the spider that will be used to crawl the webpages. We give this to the scrapy crawler.
+    This is the spider that will be used to crawl the webpages. It is provided to the Scrapy crawler.
+
+    start_urls: List of the starting URLs to scrap
     """
 
     name = "myspider"
@@ -74,6 +76,11 @@ def _request_with_cooloff(
     """
     Call the url using requests. If the endpoint returns an error wait a cooloff
     period and try again, doubling the period each attempt up to a max num_attempts.
+
+    url: the URL to call
+    headers: request headers
+    params: request parameters
+    num_attempts: The number of attemps before canceling conexion
     """
     cooloff = 1
     for call_count in range(num_attempts):
@@ -104,4 +111,13 @@ def _request_with_cooloff(
 def request_with_cooloff(
     url: str, headers: Dict[str, any], params: Dict[str, any], num_attempts: int = 3
 ):
+    """
+    Call the url using requests. If the endpoint returns an error wait a cooloff
+    period and try again, doubling the period each attempt up to a max num_attempts.
+
+    url: the URL to call
+    headers: request headers
+    params: request parameters
+    num_attempts: The number of attemps before canceling conexion
+    """
     return _request_with_cooloff(url, headers, params, num_attempts)

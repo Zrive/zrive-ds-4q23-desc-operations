@@ -7,6 +7,11 @@ logger.level = logging.INFO
 
 
 def load_api_key(path: str) -> str:
+    """
+    Load API keys for services
+
+    path: path of API keys txt file
+    """
     try:
         with open(path, "r") as file:
             file_line = file.readline().strip()

@@ -23,8 +23,6 @@ STATUS:
 def main():
     data = data_logic.data_load(ORIGINAL_FILE_PATH)
 
-    # data_sample = data.sample(n=3, random_state=1)
-
     data[["Description", "Status", "Error"]] = data.apply(
         data_logic.get_description, axis=1, summarizer_selector=SUMMARIZER_SELECTOR
     )

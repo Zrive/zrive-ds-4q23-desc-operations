@@ -12,6 +12,13 @@ OPENAI_KEYS_PATH = "keys/open_ai.txt"
 
 
 def chatgpt_call(text: str, company_name: str) -> str:
+    """
+    This function performs OpenAI ChatGPT 3.5 summarization and warns if the
+    link and the company name provided don't match. Parameters:
+
+    text: The text we want to summarize.
+    company_name: The company name.
+    """
     api_key = keys.load_api_key(OPENAI_KEYS_PATH)
     client = OpenAI(api_key=api_key)
 
@@ -40,6 +47,11 @@ def chatgpt_call(text: str, company_name: str) -> str:
 
 
 def manage_name_company_errors(text: str) -> bool:
+    """
+    Checks if text contians 'html' string
+
+    text: The text we want to check.
+    """
     if str(text).lower().find("html") != -1:
         return True
 

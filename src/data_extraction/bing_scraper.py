@@ -7,6 +7,12 @@ BING_KEYS_PATH = "keys/bing.txt"
 
 
 def _bing_query(query: str, numresults: int = 1) -> dict:
+    """
+    Provides necessary Bing API parameters and headers to perform a request_with_cooloff() request.
+
+    query: The word to search on the engines.
+    numresults: The number of links to display in the query.
+    """
     try:
         params = {
             "q": query,
@@ -30,12 +36,9 @@ def bing(query: str) -> str:
     """
     Makes a request to the API, without handling many errors.
     Concatenates the bodies of the HTMLs from the first 3 (default) URLs.
-    Parameters:
-    - query (str): The search term.
-    - num_pages (int): The number of URLs from which snippets are to be extracted.
 
-    Returns:
-    - str: The complete text of each body from the num_pages URLs.
+    query: The search term.
+    num_pages: The number of URLs from which snippets are to be extracted.
     """
     try:
         query_result = _bing_query(query=query)

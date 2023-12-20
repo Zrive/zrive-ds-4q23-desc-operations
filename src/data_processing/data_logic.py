@@ -14,6 +14,12 @@ import time
 
 
 def data_load(file_path: str) -> pd.DataFrame:
+    """
+    Reads the CSV data and aggregates a new column where descriptions will be placed.
+
+    fle_path: rhe path to csv data.
+    """
+
     df = pd.read_csv(file_path)
     df["Description"] = np.nan
     df["Description"] = df["Description"].astype(object)
@@ -25,6 +31,17 @@ def data_load(file_path: str) -> pd.DataFrame:
 
 
 def get_description(row: pd.Series, summarizer_selector: int) -> tuple[str, int, str]:
+    """
+    Given a selected summarizer and a DataFrame row, this function performs the data logic to
+    obtain a description of the company. If the company URL is available, the web scraper
+    engine will be launched. Otherwise, the search engines will be launched with this priority:
+    [Bing, DDG, Google, Wikipedia], ensuring that the text comes from the first search engine
+    that does not produce an error.
+
+    row: A pd.Series object.
+    summary_selector: Choose between the summarizers to perform the summary, where 0=OpenAI ChatGPT
+    and 1=bart_large_text_summarizer().
+    """
     error = ";"
     status = 0
     print(row["Company_NAME"])
