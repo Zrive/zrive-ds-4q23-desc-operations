@@ -5,6 +5,14 @@ MODEL = "Azma-AI/bart-large-text-summarizer"
 
 
 def generate_summary(description: str) -> str:
+    """
+    This function uses the "Azma-AI/bart-large-text-summarizer" model
+    to perform summarization. If the input text is larger than the
+    supported number of tokens, the original text will be split into
+    fragments, and summarization will be applied to each fragment.
+
+    description: the text to summarize
+    """
     summarizer = pipeline("summarization", MODEL)
 
     if pd.notna(description) and len(description) > 3:
@@ -39,5 +47,10 @@ def generate_summary(description: str) -> str:
 
 
 def get_summary(text: str) -> str:
+    """
+    Calls summary generator
+
+    text: the text to summarize
+    """
     summary = generate_summary(text)
     return summary

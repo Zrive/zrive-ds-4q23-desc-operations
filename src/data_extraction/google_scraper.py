@@ -6,15 +6,13 @@ SEARCH_ENGINE_ID_PATH = "keys/search_engine_id.txt"
 API_URL = "https://www.googleapis.com/customsearch/v1"
 
 
-def build_payload(API_KEY: str, cx: str, query: str, start: int = 1, **params):
+def build_payload(API_KEY: str, cx: str, query: str, **params) -> dict[str:any]:
     """
     Builds the necessary payload to make a request to the Google Custom Search API.
-    Parameters:
-    - api_key (str): The API key for Google Custom Search.
-    - cx (str): The custom search identifier.
-    - query (str): The search string.
-    Returns:
-    - dict: The payload for the request.
+
+    api_key : The API key for Google Custom Search.
+    cx: The custom search identifier.
+    query: The search string.
     """
     payload = {"key": API_KEY, "q": query, "cx": cx, "fileType": "html"}
     payload.update(params)
@@ -23,8 +21,10 @@ def build_payload(API_KEY: str, cx: str, query: str, start: int = 1, **params):
 
 def google(query: str) -> str:
     """
-    This function will perform a Google search and concatenate the 10 first snippets
-    which are short definitions for a web page.
+    This function performs a Google search and concatenates the 10 first snippets,
+    which are short definitions for web pages.
+
+    query: The search string.
     """
     try:
         api_key = keys.load_api_key(GOOGLE_API_KEY_PATH)

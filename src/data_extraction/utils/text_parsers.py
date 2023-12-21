@@ -13,6 +13,8 @@ def readability(input_text: str) -> str:
     port of readability.js, which is a javascript library that is used by firefox to
     extract the useful information from a webpage. We will use the Document class to
     extract the useful information from the text.
+
+    input_text: the text to summarize
     """
     doc = Document(input_text)
     summary = doc.summary()
@@ -24,6 +26,8 @@ def readability(input_text: str) -> str:
 def remove_duplicate_empty_lines(input_text: str) -> str:
     """
     This function removes all duplicate empty lines from the lines
+
+    input_text: the text to remove empty lines
     """
     lines = input_text.splitlines()
     fixed_lines = []
@@ -40,6 +44,9 @@ def get_result_lines(results: list[dict[str:str]], shorten: bool) -> str:
     """
     This function will select only lines with >15 words (thus avoiding titles, headers and no usefull data)
     and if shorten is selected, will retunr the first 50 lines
+
+    results: summarized text
+    shorten: return first 50 lines of summarized text
     """
     result_lines = []
     for result in results:
@@ -63,6 +70,9 @@ def parser_request_response(original_text: str, Cat_url: bool = False) -> str:
     """
     This function will use the bing search results as a text input and will
     return a list object with all URLs associated.
+
+    origunal_text: request result as text to parse
+    Cat_url: if true, will capture request URLs in a list. If false, parse web snippets
     """
     if not Cat_url:
         pattern = re.compile(r"'snippet': '(.*?)',")

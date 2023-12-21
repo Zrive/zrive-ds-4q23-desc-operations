@@ -11,6 +11,11 @@ logger.level = logging.INFO
 
 
 def request_html(url: str) -> BeautifulSoup:
+    """
+    This function collapses the company URL to the HTTPS protocol for performing a request.
+
+    url: The company's URL.
+    """
     url_base = "https://"
     url_complete = url_base + url
     html = html_request_with_cooloff(url_complete)
@@ -21,6 +26,10 @@ def html_request_with_cooloff(url: str, num_attempts: int = 2) -> BeautifulSoup:
     """
     Call the url using requests. If the endpoint returns an error wait a cooloff
     period and try again, doubling the period each attempt up to a max num_attempts.
+    Similar funcition is implemented in utils/web_request.py for other porpouses.
+
+    url: The company's URL.
+    num_attempts: The number of attemps before canceling conexion
     """
     cooloff = 1
     response = None
@@ -63,6 +72,12 @@ def html_request_with_cooloff(url: str, num_attempts: int = 2) -> BeautifulSoup:
 
 
 def clean_html_text(html: BeautifulSoup) -> str:
+    """
+    This function cleans an HTML result using the HTML2Text() external library with
+    the purpose of extracting the web body text.
+
+    html: A web HTML as a BeautifulSoup (bs4) object.
+    """
     if str(html).lower().find("error!:") != -1:
         return None
     else:
