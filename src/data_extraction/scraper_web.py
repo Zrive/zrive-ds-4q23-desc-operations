@@ -17,7 +17,7 @@ def request_html(url: str) -> BeautifulSoup:
     url: The company's URL.
     """
     url_base = "https://"
-    url_complete = url_base + url
+    url_complete = url_base + str(url)
     html = html_request_with_cooloff(url_complete)
     return html
 

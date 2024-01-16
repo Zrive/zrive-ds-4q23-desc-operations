@@ -120,4 +120,8 @@ def request_with_cooloff(
     params: request parameters
     num_attempts: The number of attemps before canceling conexion
     """
-    return _request_with_cooloff(url, headers, params, num_attempts)
+    return json.loads(
+        _request_with_cooloff(url, headers, params, num_attempts).content.decode(
+            "utf-8"
+        )
+    )
