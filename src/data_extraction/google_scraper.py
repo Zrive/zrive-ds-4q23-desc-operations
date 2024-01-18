@@ -27,14 +27,14 @@ def google(query: str) -> str:
     query: The search string.
     """
     try:
+        api_usage=True
         api_key = keys.load_api_key(GOOGLE_API_KEY_PATH)
         search_engine_id = keys.load_api_key(SEARCH_ENGINE_ID_PATH)
         payload = build_payload(API_KEY=api_key, cx=search_engine_id, query=query)
         response = web_requests.request_with_cooloff(
-            url=API_URL, headers={}, params=payload
+            url=API_URL, api_usage=api_usage, params=payload
         )
-        response_json = json.loads(response.content.decode("utf-8"))
-        response_to_parse = str(response_json)
+        response_to_parse = str(response)
         return text_parsers.parser_request_response(original_text=response_to_parse)
     except Exception as e:
         print(f"Error en google para {query}: {e}")

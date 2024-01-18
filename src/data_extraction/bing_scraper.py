@@ -14,6 +14,7 @@ def _bing_query(query: str, numresults: int = 1) -> dict:
     numresults: The number of links to display in the query.
     """
     try:
+        api_usage = True
         params = {
             "q": query,
             "textFormat": "HTML",
@@ -24,7 +25,7 @@ def _bing_query(query: str, numresults: int = 1) -> dict:
         api_key = keys.load_api_key(BING_KEYS_PATH)
         headers = {"Ocp-Apim-Subscription-Key": api_key}
         response = web_requests.request_with_cooloff(
-            url=SEARCH_URL, headers=headers, params=params
+            url=SEARCH_URL, api_usage = api_usage, headers=headers, params=params
         )
         return response
     except Exception as e:

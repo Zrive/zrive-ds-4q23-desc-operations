@@ -4,6 +4,7 @@ import html2text
 import logging
 import re
 import time
+from src.data_extraction.utils.web_requests import request_with_cooloff
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,8 @@ def request_html(url: str) -> BeautifulSoup:
     """
     url_base = "https://"
     url_complete = url_base + str(url)
-    html = html_request_with_cooloff(url_complete)
+    api_usage = False
+    html = request_with_cooloff(url = url_complete, api_usage=api_usage)
     return html
 
 
