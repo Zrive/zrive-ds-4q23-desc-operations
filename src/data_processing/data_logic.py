@@ -10,7 +10,6 @@ from src.data_summarizer import bart_large_text_summarizer
 from src.data_extraction.utils import error_parser
 import pandas as pd
 import numpy as np
-import time
 
 
 def data_load(file_path: str) -> pd.DataFrame:

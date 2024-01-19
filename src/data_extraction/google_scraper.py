@@ -1,5 +1,4 @@
 from src.data_extraction.utils import web_requests, text_parsers, keys
-import json
 
 GOOGLE_API_KEY_PATH = "keys/google.txt"
 SEARCH_ENGINE_ID_PATH = "keys/search_engine_id.txt"
@@ -27,7 +26,7 @@ def google(query: str) -> str:
     query: The search string.
     """
     try:
-        api_usage=True
+        api_usage = True
         api_key = keys.load_api_key(GOOGLE_API_KEY_PATH)
         search_engine_id = keys.load_api_key(SEARCH_ENGINE_ID_PATH)
         payload = build_payload(API_KEY=api_key, cx=search_engine_id, query=query)

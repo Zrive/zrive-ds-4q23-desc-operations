@@ -5,7 +5,6 @@ import logging
 import random
 import time
 import requests
-from typing import Dict
 from src.data_extraction.utils.text_parsers import (
     readability,
     remove_duplicate_empty_lines,
@@ -73,17 +72,15 @@ class MySpider(scrapy.Spider):
             self.results.append({"url": "", "title": "", "useful_text": ""})
 
 
-def _request_with_cooloff(
-    url: str, api_usage:bool, num_attempts: int, **kwargs
-):
+def _request_with_cooloff(url: str, api_usage: bool, num_attempts: int, **kwargs):
     """
     Call the url using requests. If the endpoint returns an error wait a cooloff
     period and try again, doubling the period each attempt up to a max num_attempts.
 
     url: the URL to call
-    usage: Define if we need a request for a Web URL or an API 
+    usage: Define if we need a request for a Web URL or an API
     num_attempts: The number of attemps before canceling conexion
-    **kwargs: arguments for API autentication -> headers and params 
+    **kwargs: arguments for API autentication -> headers and params
     """
     cooloff = 1
     response = None
@@ -110,7 +107,7 @@ def _request_with_cooloff(
             logger.warning(e)
             if response.status_code == 404:
                 return "404 error!:"
-            
+
             logger.info(f"API return code {response.status_code} cooloff at {cooloff}")
             if call_count != (num_attempts - 1):
                 time.sleep(cooloff)
@@ -122,22 +119,22 @@ def _request_with_cooloff(
                     return response
                 else:
                     return f"ERROR!: {response.status_code}"  # Return an error message if not using JSON
-        if api_usage:    
+        if api_usage:
             return response
         else:
             soup = bs4.BeautifulSoup(response.text, "html.parser")
             return soup
-def request_with_cooloff(
-    url: str, api_usage:bool, num_attempts: int = 3, **kwargs
-):
+
+
+def request_with_cooloff(url: str, api_usage: bool, num_attempts: int = 3, **kwargs):
     """
     Call the url using requests. If the endpoint returns an error wait a cooloff
     period and try again, doubling the period each attempt up to a max num_attempts.
 
     url: the URL to call
-    usage: Define if we need a request for a Web URL or an API 
+    usage: Define if we need a request for a Web URL or an API
     num_attempts: The number of attemps before canceling conexion
-    **kwargs: arguments for API autentication -> headers and params 
+    **kwargs: arguments for API autentication -> headers and params
     """
     result = _request_with_cooloff(url, api_usage, num_attempts, **kwargs)
     return json.loads(result.content.decode("utf-8")) if api_usage else result
